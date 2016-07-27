@@ -1,7 +1,6 @@
 package com.qr.project2;
 
 import android.content.Context;
-//import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
@@ -23,21 +22,16 @@ import org.json.JSONObject;
 
 public class signID extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener {
 
-   boolean checkFlag;
+    boolean checkFlag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_id);
 
-        SharedPreferences pref = getSharedPreferences("login.config", Context.MODE_PRIVATE);
-        final SharedPreferences.Editor editorPref = pref.edit();
-
         final EditText etUsername = (EditText) findViewById(R.id.etUsername);
         final EditText etPassword = (EditText) findViewById(R.id.etPassword);
-
         final Button bLogin = (Button) findViewById(R.id.bLogin);
-
         final CheckBox cBox = (CheckBox) findViewById(R.id.cBox);
         cBox.setOnCheckedChangeListener(this);
         checkFlag = cBox.isChecked();
@@ -74,57 +68,44 @@ public class signID extends AppCompatActivity implements CompoundButton.OnChecke
                                 boolean success = jsonResponse.getBoolean("success");
                                 int adminLogin = jsonResponse.getInt("loginAdmin");
 
+                                String Name = jsonResponse.getString("Name");
+                                String Email = jsonResponse.getString("Email");
+
+                                SharedPreferences pref = getSharedPreferences(Config.Pref_Name, Context.MODE_PRIVATE);
+                                final SharedPreferences.Editor editorPref = pref.edit();
+
                                 AlertDialog.Builder builder = new AlertDialog.Builder(signID.this);
                                 if (success) {
-
-                                    if(checkFlag){
-                                        editorPref.putString(Config.Username, Username);
-                                        editorPref.putString(Config.Password, Password);
+                                    if (checkFlag) {
+                                        editorPref.putString(Config.Name_Pref, Name);
+                                        editorPref.putString(Config.Username_Pref, Username);
+                                        editorPref.putString(Config.Email_Pref, Email);
+                                        editorPref.putString(Config.Password_Pref, Password);
+                                        editorPref.putBoolean(Config.Login_Status_Pref, true);
                                         editorPref.apply();
                                     }
-
-                                    String Name = jsonResponse.getString("Name");
-                                    String Email = jsonResponse.getString("Email");
-
                                     Toast toast = Toast.makeText(signID.this, "User Login Done", Toast.LENGTH_SHORT);
                                     toast.show();
 
                                     Intent i = new Intent(signID.this, userHome.class);
-                                    i.putExtra("Name", Name);
-                                    i.putExtra(Config.Username, Username);
-                                    i.putExtra("Email", Email);
-
                                     startActivity(i);
                                     finish();
+
                                 } else if (adminLogin == 1) {
+                                    if (checkFlag) {
+                                        editorPref.putString(Config.Name_Pref, Name);
+                                        editorPref.putString(Config.Username_Pref, Username);
+                                        editorPref.putString(Config.Email_Pref, Email);
+                                        editorPref.putString(Config.Password_Pref, Password);
+                                        editorPref.putBoolean(Config.Login_Status_Pref, true);
+                                        editorPref.apply();
+                                    }
                                     Toast toast = Toast.makeText(signID.this, "Admin Login Done", Toast.LENGTH_SHORT);
                                     toast.show();
 
-                                    if(checkFlag){
-                                        Intent x = new Intent(signID.this, adminHome.class);
-                                        startActivity(x);
-                                        finish();
-                                    }
-                                    else{
-                                        Intent i = new Intent(signID.this, qrtest.class);
-                                        startActivity(i);
-                                    }
-
-                                    /*builder.setMessage("Proceed")
-                                            .setPositiveButton("Proceed", new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialogInterface, int i) {
-
-                                                }
-                                            })
-                                            .setNegativeButton("Retry", new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialogInterface, int i) {
-
-                                                }
-                                            })
-                                            .create()
-                                            .show();*/
+                                    Intent i = new Intent(signID.this, adminHome.class);
+                                    startActivity(i);
+                                    finish();
 
                                 } else {
                                     builder.setMessage("Login Failed")
@@ -132,7 +113,6 @@ public class signID extends AppCompatActivity implements CompoundButton.OnChecke
                                             .create()
                                             .show();
                                 }
-
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -150,22 +130,5 @@ public class signID extends AppCompatActivity implements CompoundButton.OnChecke
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         checkFlag = b;
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        SharedPreferences pref = getSharedPreferences("login.config", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editorPref = pref.edit();
-
-        String x = pref.getString(Config.Username, "");
-        String y = pref.getString(Config.Password, "");
-
-        if (!(x.matches("")  & y.matches(""))){
-            Intent i = new Intent(signID.this, userHome.class);
-            startActivity(i);
-        }
-
     }
 }
