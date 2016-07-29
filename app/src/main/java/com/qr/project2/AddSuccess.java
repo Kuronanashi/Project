@@ -41,20 +41,22 @@ public class AddSuccess extends AppCompatActivity {
         bLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SharedPreferences pref = getSharedPreferences(Config.Pref_Name, Context.MODE_PRIVATE);
-                SharedPreferences.Editor editorPref = pref.edit();
-
-                editorPref.putBoolean(Config.Login_Status_Pref, false);
-                editorPref.putString(Config.Name_Pref, "");
-                editorPref.putString(Config.Username_Pref, "");
-                editorPref.putString(Config.Email_Pref, "");
-                editorPref.putString(Config.Password_Pref, "");
-                editorPref.commit();
 
                 builder.setMessage("Proceed?")
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
+
+                                SharedPreferences pref = getSharedPreferences(Config.Pref_Name, Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editorPref = pref.edit();
+
+                                editorPref.putBoolean(Config.Login_Status_Pref, false);
+                                editorPref.putBoolean(Config.Login_Status_Pref_Admin, false);
+                                editorPref.putString(Config.Name_Pref, "");
+                                editorPref.putString(Config.Username_Pref, "");
+                                editorPref.putString(Config.Email_Pref, "");
+                                editorPref.putString(Config.Password_Pref, "");
+                                editorPref.apply();
 
                                 Intent intent = new Intent(AddSuccess.this, mainPage.class);
                                 Toast toast = Toast.makeText(AddSuccess.this, "Logout Success", Toast.LENGTH_SHORT);

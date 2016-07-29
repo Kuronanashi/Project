@@ -13,7 +13,8 @@ public class Config {
     public static final String Password_Pref = "Password";
 
     public static final String Login_Status_Pref = "Loggedin";
-    public static final String Array_Pref = "Result";
+    public static final String Login_Status_Pref_Admin = "LoggedinAdmin";
+
 
 
 

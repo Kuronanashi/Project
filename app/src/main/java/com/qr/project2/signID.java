@@ -72,7 +72,7 @@ public class signID extends AppCompatActivity implements CompoundButton.OnChecke
                                 String Email = jsonResponse.getString("Email");
 
                                 SharedPreferences pref = getSharedPreferences(Config.Pref_Name, Context.MODE_PRIVATE);
-                                final SharedPreferences.Editor editorPref = pref.edit();
+                                SharedPreferences.Editor editorPref = pref.edit();
 
                                 AlertDialog.Builder builder = new AlertDialog.Builder(signID.this);
                                 if (success) {
@@ -97,7 +97,7 @@ public class signID extends AppCompatActivity implements CompoundButton.OnChecke
                                         editorPref.putString(Config.Username_Pref, Username);
                                         editorPref.putString(Config.Email_Pref, Email);
                                         editorPref.putString(Config.Password_Pref, Password);
-                                        editorPref.putBoolean(Config.Login_Status_Pref, true);
+                                        editorPref.putBoolean(Config.Login_Status_Pref_Admin, true);
                                         editorPref.apply();
                                     }
                                     Toast toast = Toast.makeText(signID.this, "Admin Login Done", Toast.LENGTH_SHORT);

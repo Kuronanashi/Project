@@ -11,6 +11,7 @@ import android.widget.Button;
 public class mainPage extends AppCompatActivity {
 
     boolean checkLogin = false;
+    boolean checkLoginAdmin = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,9 +53,13 @@ public class mainPage extends AppCompatActivity {
         super.onResume();
         SharedPreferences pref = getSharedPreferences(Config.Pref_Name, Context.MODE_PRIVATE);
         checkLogin = pref.getBoolean(Config.Login_Status_Pref, false);
+        checkLoginAdmin = pref.getBoolean(Config.Login_Status_Pref_Admin, false);
 
         if (checkLogin) {
             Intent i = new Intent(mainPage.this, userHome.class);
+            startActivity(i);
+        } else if (checkLoginAdmin) {
+            Intent i = new Intent(mainPage.this, adminHome.class);
             startActivity(i);
         }
     }
