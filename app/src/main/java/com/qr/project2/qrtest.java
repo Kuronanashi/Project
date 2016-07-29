@@ -1,66 +1,90 @@
 package com.qr.project2;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
+import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class qrtest extends AppCompatActivity  {
+
+    private final static String T_ID = "ID";
+    private final static String T_Name = "Name";
+    private final static String T_Username = "Username";
+    private final static String T_Email = "Email";
+
+    ArrayList <HashMap<String, String>> params;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qrtest);
 
-        final EditText etEdit1 = (EditText) findViewById(R.id.etEdit1);
-        final EditText etEdit2 = (EditText) findViewById(R.id.etEdit2);
-        final Button bHensin = (Button) findViewById(R.id.bHensin);
-        final Button bHO = (Button) findViewById(R.id.bHO);
-        final Button bDelete = (Button) findViewById(R.id.bDelete);
+        final ListView List = (ListView) findViewById(R.id.listview);
 
-        final TextView tvChange = (TextView) findViewById(R.id.tvChange);
-        final TextView tvChange2 = (TextView) findViewById(R.id.tvChange2);
+        params = new ArrayList<HashMap<String, String>>();
 
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url = "http://tryqr123.tk/getUsername.php";
 
-        final SharedPreferences prefShare = getSharedPreferences("login.config", Context.MODE_PRIVATE);
-        final SharedPreferences.Editor editorPref = prefShare.edit();
-
-        bHensin.setOnClickListener(new View.OnClickListener() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
-            public void onClick(View view) {
-                String a = etEdit1.getText().toString();
-                String b = etEdit2.getText().toString();
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    JSONArray array = jsonObject.getJSONArray("result");
 
-                editorPref.putString("Data 1",a);
-                editorPref.putString("Data 2",b);
-                editorPref.apply();
+                    for (int i = 0; i< array.length(); i++) {
+                        JSONObject get = array.getJSONObject(i);
+
+                        String ID = get.getString(T_ID);
+                        String Name = get.getString(T_Name);
+                        String Username = get.getString(T_Username);
+                        String Email = get.getString(T_Email);
+
+                        HashMap<String, String> detail_params = new HashMap<String, String>();
+
+                        detail_params.put(T_ID, ID);
+                        detail_params.put(T_Name, Name);
+                        detail_params.put(T_Username, Username);
+                        detail_params.put(T_Email, Email);
+
+                        params.add(detail_params);
+                    }
+
+                    ListAdapter adapter = new SimpleAdapter(qrtest.this, params, R.layout.get_profile,
+                            new String[]{T_ID,T_Name,T_Username,T_Email},
+                            new int[]{R.id.ID, R.id.Name, R.id.Username, R.id.Email}
+                    );
+
+                    List.setAdapter(adapter);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(qrtest.this, "Not working", Toast.LENGTH_SHORT).show();
             }
         });
 
-        bHO.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String x= prefShare.getString("Data 1", "");
-                String y= prefShare.getString("Data 2", "");
-
-                tvChange.setText(x);
-                tvChange2.setText(y);
-
-            }
-        });
-
-        bDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                editorPref.clear();
-                editorPref.commit();
-
-            }
-        });
+        queue.add(stringRequest);
     }
-
 }

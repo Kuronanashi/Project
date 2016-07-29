@@ -19,6 +19,8 @@ public class mainPage extends AppCompatActivity {
 
         Button bSignInID = (Button) findViewById(R.id.bSignInID);
         Button bSignInQR = (Button) findViewById(R.id.bSignInQR);
+        Button bQR = (Button) findViewById(R.id.bQR);
+
 
         bSignInID.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -32,6 +34,14 @@ public class mainPage extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(mainPage.this, signQR.class);
+                startActivity(i);
+            }
+        });
+
+        bQR.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(mainPage.this, qrtest.class);
                 startActivity(i);
             }
         });
