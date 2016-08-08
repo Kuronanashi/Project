@@ -2,12 +2,14 @@ package com.qr.project2;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
@@ -30,6 +32,9 @@ public class editAdd extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_add);
 
+        /*RelativeLayout root=(RelativeLayout)findViewById(R.id.root);
+        root.setBackgroundColor(Color.parseColor(Config.Colour));*/
+
         final Button bAddProfile = (Button) findViewById(R.id.bAddProfile);
         final EditText etName = (EditText)findViewById(R.id.etName);
         final EditText etUsername = (EditText)findViewById(R.id.etUsername);
@@ -45,6 +50,8 @@ public class editAdd extends AppCompatActivity {
                 final String Email        = etEmail.getText().toString();
                 final String Password     = etPassword.getText().toString();
                 final String RPassword    = etRPassword.getText().toString();
+                final int UsernameLength  = Username.length();
+                final int NameLength  = Name.length();
 
                 final AlertDialog.Builder builder = new AlertDialog.Builder(editAdd.this);
                 boolean valid = false;
@@ -60,10 +67,15 @@ public class editAdd extends AppCompatActivity {
                             .show();
                 } else if (Name.matches("")) {
                     etName.setError("Please, Enter The Name");
+                }else if (NameLength < 5 || NameLength > 16) {
+                    etName.setError("Please, Enter The Name between 5 to 16 character");
+
                 } else if (Username.matches("")) {
                     etUsername.setError("Please, Enter The Username");
+                } else if (UsernameLength < 5 || UsernameLength > 16) {
+                    etUsername.setError("Please, Enter The Username between 5 to 16 character");
 
-                } else if (Email.matches("")) {
+                }else if (Email.matches("")) {
                     etEmail.setError("Please, Enter The Email");
                 } else if (!Email.matches(EmailPattern)) {
                     etEmail.setError("Please, Enter Valid Email");
@@ -117,6 +129,7 @@ public class editAdd extends AppCompatActivity {
                                 Toast toast = Toast.makeText(editAdd.this, "Adding Employee Done", Toast.LENGTH_SHORT);
                                 toast.show();
                                 startActivity(i);
+
                             }
 
                         } catch (JSONException e) {

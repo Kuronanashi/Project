@@ -3,6 +3,7 @@ package com.qr.project2;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
@@ -87,7 +89,11 @@ public class signID extends AppCompatActivity implements CompoundButton.OnChecke
                                     Toast toast = Toast.makeText(signID.this, "User Login Done", Toast.LENGTH_SHORT);
                                     toast.show();
 
+                                    editorPref.putString(Config.Username_Pref_Time, Username);
+                                    editorPref.apply();
+
                                     Intent i = new Intent(signID.this, userHome.class);
+                                    i.putExtra(Config.Username_Pref_Time, Username);
                                     startActivity(i);
                                     finish();
 
@@ -102,6 +108,9 @@ public class signID extends AppCompatActivity implements CompoundButton.OnChecke
                                     }
                                     Toast toast = Toast.makeText(signID.this, "Admin Login Done", Toast.LENGTH_SHORT);
                                     toast.show();
+
+                                    editorPref.putString(Config.Username_Pref_Time, Username);
+                                    editorPref.apply();
 
                                     Intent i = new Intent(signID.this, adminHome.class);
                                     startActivity(i);

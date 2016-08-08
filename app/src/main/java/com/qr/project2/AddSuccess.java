@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ public class AddSuccess extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_success);
+
 
         final ImageView imageView = (ImageView)findViewById(R.id.imageView);
         final Button bHome = (Button) findViewById(R.id.bHome);
@@ -35,6 +37,7 @@ public class AddSuccess extends AppCompatActivity {
             public void onClick(View view) {
                 Intent i = new Intent(AddSuccess.this, adminHome.class);
                 startActivity(i);
+                finish();
             }
         });
 
@@ -56,12 +59,19 @@ public class AddSuccess extends AppCompatActivity {
                                 editorPref.putString(Config.Username_Pref, "");
                                 editorPref.putString(Config.Email_Pref, "");
                                 editorPref.putString(Config.Password_Pref, "");
+                                editorPref.putString(Config.Username_Pref_Time, "");
                                 editorPref.apply();
 
-                                Intent intent = new Intent(AddSuccess.this, mainPage.class);
                                 Toast toast = Toast.makeText(AddSuccess.this, "Logout Success", Toast.LENGTH_SHORT);
                                 toast.show();
+                                Intent intent = new Intent(AddSuccess.this, mainPage.class);
+                                if(Build.VERSION.SDK_INT >= 11) {
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                } else {
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                }
                                 startActivity(intent);
+                                finish();
                             }
                         })
                         .setNegativeButton("No", new DialogInterface.OnClickListener() {

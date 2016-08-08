@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.os.Build;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
@@ -44,6 +47,7 @@ public class adminProfile extends AppCompatActivity {
 
         final ListView List = (ListView) findViewById(R.id.lvUser);
         Button bAdd = (Button) findViewById(R.id.bAdd);
+        Button bLeave = (Button) findViewById(R.id.bLeave);
         final Button bLogout = (Button) findViewById(R.id.bLogout);
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(adminProfile.this);
@@ -62,10 +66,10 @@ public class adminProfile extends AppCompatActivity {
                     for (int i = 0; i< array.length(); i++) {
                         JSONObject get = array.getJSONObject(i);
 
-                        String ID = get.getString(T_ID);
-                        String Name = get.getString(T_Name);
-                        String Username = get.getString(T_Username);
-                        String Email = get.getString(T_Email);
+                        String ID = "ID: " + get.getString(T_ID);
+                        String Name = "Name: " +get.getString(T_Name);
+                        String Username ="Username: " +  get.getString(T_Username);
+                        String Email = "Email: " + get.getString(T_Email);
 
                         HashMap<String, String> detail_params = new HashMap<String, String>();
 
@@ -79,7 +83,7 @@ public class adminProfile extends AppCompatActivity {
 
                     ListAdapter adapter = new SimpleAdapter(adminProfile.this, params, R.layout.get_profile,
                             new String[]{T_ID,T_Name,T_Username,T_Email},
-                            new int[]{R.id.ID, R.id.Name, R.id.Username, R.id.Email}
+                            new int[]{R.id.tv1, R.id.tv2, R.id.tv3, R.id.tv4}
                     );
 
                     List.setAdapter(adapter);
@@ -105,6 +109,14 @@ public class adminProfile extends AppCompatActivity {
             }
         });
 
+        bLeave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(adminProfile.this, deleteAccount.class);
+                startActivity(i);
+            }
+        });
+
         bLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -122,12 +134,21 @@ public class adminProfile extends AppCompatActivity {
                                 editorPref.putString(Config.Username_Pref, "");
                                 editorPref.putString(Config.Email_Pref, "");
                                 editorPref.putString(Config.Password_Pref, "");
+                                editorPref.putString(Config.Username_Pref_Time, "");
+
                                 editorPref.apply();
 
-                                Intent intent = new Intent(adminProfile.this, mainPage.class);
+
                                 Toast toast = Toast.makeText(adminProfile.this, "Logout Success", Toast.LENGTH_SHORT);
                                 toast.show();
+                                Intent intent = new Intent(adminProfile.this, mainPage.class);
+                                if(Build.VERSION.SDK_INT >= 11) {
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                } else {
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                }
                                 startActivity(intent);
+                                finish();
                             }
                         })
                         .setNegativeButton("No", new DialogInterface.OnClickListener() {

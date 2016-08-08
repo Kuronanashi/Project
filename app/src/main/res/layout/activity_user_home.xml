@@ -7,64 +7,48 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.qr.project2.userHome">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Large Text"
-        android:id="@+id/tvLoginUsername"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Large Text"
-        android:id="@+id/tvLoginEmail"
-        android:layout_below="@+id/tvLoginUsername"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+    tools:context="com.qr.project2.userHome"
+    android:background="@drawable/back"
+    >
 
     <Button
-        style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Logout"
         android:id="@+id/bLogout"
+        android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignBottom="@+id/tvLoginEmail" />
+        android:layout_alignParentEnd="true" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Large Text"
-        android:id="@+id/tvName"
-        android:layout_below="@+id/tvLoginEmail"
+        android:text="User Home"
+        android:id="@+id/tvUser_home"
+        android:layout_marginLeft="30dp"
+        android:layout_marginStart="35dp"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Large Text"
-        android:id="@+id/tvEmail"
-        android:layout_below="@+id/tvName"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="30dp" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Button"
-        android:id="@+id/bShow"
-        android:layout_below="@+id/tvName"
-        android:layout_alignRight="@+id/bLogout"
-        android:layout_alignEnd="@+id/bLogout" />
+        android:text="Apply Leave"
+        android:id="@+id/bLeave"
+        android:layout_marginTop="89dp"
+        android:layout_below="@+id/tvUser_home"
+        android:layout_alignRight="@+id/bPayroll_view"
+        android:layout_alignEnd="@+id/bPayroll_view" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="View Payroll"
+        android:id="@+id/bPayroll_view"
+        android:layout_marginTop="78dp"
+        android:layout_below="@+id/bLeave"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>
