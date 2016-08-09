@@ -3,39 +3,10 @@ package com.qr.project2;
 import android.app.Activity;
 import android.os.Bundle;
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+public final class userLeave extends Activity {
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.hardware.Camera;
-import android.os.Bundle;
-import android.os.Environment;
-import android.provider.ContactsContract;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-
-import com.google.zxing.client.android.camera.CameraConfigurationUtils;
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.nio.charset.Charset;
-
-public final class zxtest extends Activity {
-
-    private static final String TAG = zxtest.class.getSimpleName();
-    private static final String PACKAGE_NAME = zxtest.class.getPackage().getName();
+    private static final String TAG = userLeave.class.getSimpleName();
+    private static final String PACKAGE_NAME = userLeave.class.getPackage().getName();
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -121,7 +92,7 @@ public final class zxtest extends Activity {
         @Override
         public void onClick(View v) {
             Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setClassName(zxtest.this, BenchmarkActivity.class.getName());
+            intent.setClassName(userLeave.this, BenchmarkActivity.class.getName());
             startActivity(intent);
         }
     };
@@ -129,7 +100,7 @@ public final class zxtest extends Activity {
     private final View.OnClickListener scanProduct = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            IntentIntegrator integrator = new IntentIntegrator(zxtest.this);
+            IntentIntegrator integrator = new IntentIntegrator(userLeave.this);
             integrator.addExtra("SCAN_WIDTH", 800);
             integrator.addExtra("SCAN_HEIGHT", 200);
             integrator.addExtra("RESULT_DISPLAY_DURATION_MS", 3000L);
@@ -141,7 +112,7 @@ public final class zxtest extends Activity {
     private final View.OnClickListener scanQRCode = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            IntentIntegrator integrator = new IntentIntegrator(zxtest.this);
+            IntentIntegrator integrator = new IntentIntegrator(userLeave.this);
             integrator.initiateScan(IntentIntegrator.QR_CODE_TYPES);
         }
     };
@@ -149,7 +120,7 @@ public final class zxtest extends Activity {
     private final View.OnClickListener scanAnything = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            IntentIntegrator integrator = new IntentIntegrator(zxtest.this);
+            IntentIntegrator integrator = new IntentIntegrator(userLeave.this);
             integrator.initiateScan();
         }
     };
@@ -217,7 +188,7 @@ public final class zxtest extends Activity {
     private final View.OnClickListener encodeHiddenData = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            IntentIntegrator integrator = new IntentIntegrator(zxtest.this);
+            IntentIntegrator integrator = new IntentIntegrator(userLeave.this);
             integrator.addExtra("ENCODE_SHOW_CONTENTS", false);
             integrator.shareText("SURPRISE!");
         }

@@ -4,14 +4,20 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -24,213 +30,324 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-public class viewPayroll extends AppCompatActivity {
+public class viewPayroll extends AppCompatActivity implements View.OnClickListener{
 
-    /*private final static String T_Username = "Username";
+    private final static String T_Username = "Username";
     private final static String T_Time_Detail = "Time_Detail";
     private final static String T_Time_Logout = "Time_Logout";
-    private final static String T_Time_Date = "T_date";
+    private final static String T_Time_Date = "T_Date";
 
-    ArrayList<HashMap<String, String>> params;*/
+    private final static String T_Total = "T_Total";
+
+    Button bLogout,bMonth_check;
+    String Username, Spinner_selected;
+    String MonthA[] = {"1","2","3","4","5","6","7","8","9","10","11","12"};
+    Spinner sMonth_spinner;
+
+    TextView tvTry,tvResult_data;
+    ListView listView;
+
+    private String JSON_STRING;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_payroll);
 
-        /*final AlertDialog.Builder builder = new AlertDialog.Builder(viewPayroll.this);
+        bLogout = (Button) findViewById(R.id.bLogout);
+        bMonth_check = (Button) findViewById(R.id.bMonth_check);
+        sMonth_spinner = (Spinner)findViewById(R.id.sMonth_spinner);
 
-        SharedPreferences pref = getSharedPreferences(Config.Pref_Name, Context.MODE_PRIVATE);
-        final String Username = pref.getString(Config.Username_Pref_Time, "Empty");
-        //final String log_url = pref.getString(Config.Logout_url, "Empty");
+        tvTry = (TextView) findViewById(R.id.tvTry);
+        listView = (ListView) findViewById(R.id.listView);
 
-        RequestQueue queue = Volley.newRequestQueue(this);
-        //RequestQueue queue2 = Volley.newRequestQueue(this);
+        tvResult_data = (TextView) findViewById(R.id.tvResult_data);
 
-        final ListView List = (ListView) findViewById(R.id.listview);
-        String url = "http://tryqr123.tk/getTime.php";
-        //String url2 = "http://tryqr123.tk/getLogoutTime.php";
+        Intent i = getIntent();
+        Username = i.getStringExtra(Config.Username_Pref_Time);
 
-        final Button bLogout = (Button) findViewById(R.id.bLogout);
+        ArrayAdapter <String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, MonthA);
+        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sMonth_spinner.setAdapter(spinnerArrayAdapter);
 
-        //params = new ArrayList<HashMap<String, String>>();
-        params = new ArrayList<>();
+        bLogout.setOnClickListener(this);
+        bMonth_check.setOnClickListener(this);
 
-
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+        sMonth_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onResponse(String response) {
-                try {
-                    JSONObject jsonObject = new JSONObject(response);
-                    JSONArray array = jsonObject.getJSONArray("result");
-
-                    String format = "dd-MM-yyyy HH:mm:ss";
-                    SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.US);
-
-                    for (int i = 0; i< array.length(); i++) {
-                        JSONObject get = array.getJSONObject(i);
-
-                        String Username = get.getString(T_Username);
-                        String Time_Detail = get.getString(T_Time_Detail);
-                        String Time_Logout = get.getString(T_Time_Logout);
-
-                        Date fromDate = sdf.parse(Time_Detail);
-                        Date toDate = sdf.parse(Time_Logout);
-                        long diff = 0;
-
-                        if(fromDate.before(toDate))
-                        {
-                            diff = toDate.getTime() - fromDate.getTime();
-                        }
-                        if(fromDate.after(toDate))
-                        {
-                            diff = fromDate.getTime() - toDate.getTime();
-                        }
-
-                        //long diff = toDate.getTime() - fromDate.getTime();
-                        String dateFormat="duration: ";
-
-                        int diffDays = (int) (diff / (24 * 60 * 60 * 1000));
-
-                        if(diffDays>0){
-                            dateFormat+=diffDays+" day ";
-                        }
-                        diff -= diffDays * (24 * 60 * 60 * 1000);
-
-                        int diffhours = (int) (diff / (60 * 60 * 1000));
-                        if(diffhours>0){
-                            dateFormat+=diffhours+" hour ";
-                        }
-                        diff -= diffhours * (60 * 60 * 1000);
-
-                        int diffmin = (int) (diff / (60 * 1000));
-                        if(diffmin>0){
-                            dateFormat+=diffmin+" min ";
-                        }
-                        diff -= diffmin * (60 * 1000);
-
-                        int diffsec = (int) (diff / (1000));
-                        if(diffsec>0){
-                            dateFormat+=diffsec+" sec";
-                        }
-
-                        //HashMap<String, String> detail_params = new HashMap<String, String>();
-                        HashMap<String, String> detail_params = new HashMap<>();
-
-
-                        detail_params.put(T_Username, Username);
-                        detail_params.put(T_Time_Detail, Time_Detail);
-                        detail_params.put(T_Time_Logout, Time_Logout);
-                        detail_params.put(T_Time_Date, dateFormat);
-
-                        params.add(detail_params);
-                    }
-
-                    ListAdapter adapter = new SimpleAdapter(viewPayroll.this, params, R.layout.get_payroll,
-                            new String[]{T_Username,T_Time_Detail,T_Time_Logout,T_Time_Date},
-                            new int[]{R.id.Username, R.id.Time_Detail, R.id.Time_Logout, R.id.Time_Date}
-                    );
-
-
-                    List.setAdapter(adapter);
-                } catch (JSONException | ParseException e) {
-                    e.printStackTrace();
-                }
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                Spinner_selected = sMonth_spinner.getSelectedItem().toString();
+                Toast.makeText(viewPayroll.this, sMonth_spinner.getSelectedItem().toString(), Toast.LENGTH_SHORT).show();
             }
-        }, new Response.ErrorListener() {
+
             @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(viewPayroll.this, "Not working", Toast.LENGTH_SHORT).show();
-            }
-        }) {
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<>();
-                params.put(T_Username, Username);
-                return params;
-            }
-        };
+            public void onNothingSelected(AdapterView<?> adapterView) {
 
-
-        queue.add(stringRequest);
-
-        bLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                builder.setMessage("Proceed?")
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                /*StringRequest stringRequest1 = new StringRequest(Request.Method.POST, url2, new Response.Listener<String>() {
-                                    @Override
-                                    public void onResponse(String response) {
-                                        try {
-                                            /*JSONObject jsonResponse = new JSONObject(response);
-                                            int getTimeLogout = jsonResponse.getInt("getTimeMessage");
-
-                                            String a = jsonResponse.getString("Name");
-
-                                            if (getTimeLogout == 1) {
-                                                Toast toast = Toast.makeText(viewPayroll.this, "Logout Recorded", Toast.LENGTH_SHORT);
-                                                toast.show();
-                                            }
-                                            else {
-                                                Toast toast = Toast.makeText(viewPayroll.this, "Logout Not Recorded", Toast.LENGTH_SHORT);
-                                                toast.show();
-                                            }*/
-                                        /*} catch (JSONException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                }){
-                                    protected Map<String, String> getParams() {
-                                        Map<String, String> params = new HashMap<>();
-                                        params.put(T_Username, Username);
-                                        return params;
-                                    }
-                                };
-
-                                RequestQueue queue = Volley.newRequestQueue(viewPayroll.this);
-                                queue.add(stringRequest1);*/
-
-                                /*SharedPreferences pref = getSharedPreferences(Config.Pref_Name, Context.MODE_PRIVATE);
-                                SharedPreferences.Editor editorPref = pref.edit();
-
-                                editorPref.putBoolean(Config.Login_Status_Pref, false);
-                                editorPref.putBoolean(Config.Login_Status_Pref_Admin, false);
-                                editorPref.putString(Config.Name_Pref, "");
-                                editorPref.putString(Config.Username_Pref, "");
-                                editorPref.putString(Config.Email_Pref, "");
-                                editorPref.putString(Config.Password_Pref, "");
-                                editorPref.putString(Config.Username_Pref_Time, "");
-                                editorPref.apply();
-
-                                Intent intent = new Intent(viewPayroll.this, mainPage.class);
-                                Toast toast = Toast.makeText(viewPayroll.this, "Logout Success", Toast.LENGTH_SHORT);
-                                toast.show();
-                                startActivity(intent);
-                            }
-                        })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-
-                            }
-                        })
-                        .create()
-                        .show();
             }
         });
+
+
     }
+
+    private void getTime(){
+        class GetTime extends AsyncTask<Void,Void,String> {
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+                //JSON_STRING = s;
+                takeTime(s);
+            }
+
+            @Override
+            protected String doInBackground(Void... params) {
+                RequestHandler rh = new RequestHandler();
+                //String s = rh.sendGetRequest(Config.getTime_url);
+                String s = rh.sendGetRequestParam(Config.getTime_url, Username);
+                return s;
+            }
+        }
+        GetTime gj = new GetTime();
+        gj.execute();
     }
+
+    private void takeTime(String json){
+        //JSONObject jsonObject = null;
+        ArrayList<HashMap<String,String>> list = new ArrayList<HashMap<String, String>>();
+        try {
+            JSONObject jsonObject = new JSONObject(json);
+            JSONArray result = jsonObject.getJSONArray("result");
+
+            String x = sMonth_spinner.getSelectedItem().toString();
+            int m = Integer.parseInt(x);
+            int mo = 0;
+            if (m == 1){
+                mo = 31;
+            } else if (m == 2){
+                mo = 29;
+            } else if (m == 3){
+                mo = 31;
+            } else if (m == 4){
+                mo = 30;
+            } else if (m == 5){
+                mo = 31;
+            } else if (m == 6){
+                mo = 30;
+            } else if (m == 7){
+                mo = 31;
+            } else if (m == 8){
+                mo = 31;
+            } else if (m == 9){
+                mo = 30;
+            } else if (m == 10){
+                mo = 31;
+            } else if (m == 11){
+                mo = 30;
+            } else if (m == 12){
+                mo = 31;
+            }
+
+            String format = "yyyy-MM-dd HH:mm:ss";
+            SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.US);
+
+            Calendar cal=Calendar.getInstance();
+            SimpleDateFormat current_month_f = new SimpleDateFormat("M", Locale.US);
+            String current_month = current_month_f.format(cal.getTime());
+            SimpleDateFormat current_date_f = new SimpleDateFormat("d", Locale.US);
+            String current_date = current_date_f.format(cal.getTime());
+
+            int Count_full =0 , Count_not_full = 0, Total_hour = 0 , Total_money = 0, Count_w=0;
+
+            for(int i = 0; i<result.length(); i++){
+                JSONObject get = result.getJSONObject(i);
+
+                String Username = get.getString(T_Username);
+                String Time_Detail =get.getString(T_Time_Detail);
+                String Time_Logout =get.getString(T_Time_Logout);
+
+                Date fromDate = sdf.parse(Time_Detail);
+                Date toDate = sdf.parse(Time_Logout);
+                long diff = 0;
+
+                String month_data = "" + (fromDate.getMonth()+1);
+
+                if(fromDate.before(toDate))
+                {
+                    diff = toDate.getTime() - fromDate.getTime();
+                }
+                if(fromDate.after(toDate))
+                {
+                    diff = fromDate.getTime() - toDate.getTime();
+                }
+
+                //long diff = toDate.getTime() - fromDate.getTime();
+                String dateFormat="Duration: ";
+
+                int diffDays = (int) (diff / (24 * 60 * 60 * 1000));
+                if(diffDays>0){
+                    dateFormat+=diffDays+" day ";
+                }
+                diff -= diffDays * (24 * 60 * 60 * 1000);
+
+                int diffhours = (int) (diff / (60 * 60 * 1000));
+                if(diffhours>0){
+                    dateFormat+=diffhours+" hour ";
+                }
+                diff -= diffhours * (60 * 60 * 1000);
+
+                int diffmin = (int) (diff / (60 * 1000));
+                if(diffmin>0){
+                    dateFormat+=diffmin+" min ";
+                }
+                diff -= diffmin * (60 * 1000);
+
+                int diffsec = (int) (diff / (1000));
+                if(diffsec>0){
+                    dateFormat+=diffsec+" sec";
+                }
+
+
+
+                if (x.matches(month_data) ) {
+
+                    if (diffhours >= 8 || diffDays >= 1)
+                    {
+                        Count_full++;
+                    } else{
+                        Count_not_full++;
+                    }
+                    Count_w++;
+                    Total_hour = Total_hour + diffhours;
+
+                    HashMap<String, String> detail_params = new HashMap<>();
+                    detail_params.put(T_Username, "Username: " +Username);
+                    detail_params.put(T_Time_Detail, "Login Time : " +Time_Detail);
+                    detail_params.put(T_Time_Logout, "Login Out : " +Time_Logout);
+                    detail_params.put(T_Time_Date, "Time : " +dateFormat);
+                    detail_params.put(T_Total, current_date + "");
+
+                    list.add(detail_params);
+                }
+            }
+            int Money = 2500 - (30 - Count_w) * 50;
+            String Text = "Your salary this month is : " + Money + "\nTotal working days : " + Count_w  + " from " + mo + " days with " + Count_full +  " day full time and " + Count_not_full + " day not full time \nTotal working hour : "+ Total_hour + " /month";
+
+            if (x.matches(current_month)){
+                Text = "Your salary this month is : " + Money + "\nTotal working days : " + Count_w  + " from " + current_date + " days with " + Count_full +  " day full time and " + Count_not_full + " day not full time \nTotal working hour : "+ Total_hour + " /month";
+            }
+
+            tvResult_data.setText(Text);
+
+        } catch (JSONException | ParseException e) {
+            e.printStackTrace();
+        }
+
+        ListAdapter adapter = new SimpleAdapter( viewPayroll.this, list, R.layout.get_profile,
+                new String[]{T_Username,T_Time_Detail,T_Time_Logout,T_Time_Date,T_Total},
+                new int[]{R.id.tv1, R.id.tv2, R.id.tv3, R.id.tv4,R.id.tv5});
+        listView.setAdapter(adapter);
+
+    }
+
+
+
+
+
+    private void userLogout(){
+        class UserLogout extends AsyncTask<Void,Void,String> {
+            @Override
+            protected String doInBackground(Void... params) {
+                HashMap<String,String> hashMap = new HashMap<>();
+                hashMap.put(Config.Key_Username,Username);
+
+                RequestHandler rh = new RequestHandler();
+                String s = rh.sendPostRequest(Config.Logout_url,hashMap);
+                return s;
+            }
+        }
+        UserLogout ue = new UserLogout();
+        ue.execute();
+    }
+
+    private void confirmLogout(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(viewPayroll.this);
+        builder.setMessage("Proceed?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        userLogout();
+
+                        SharedPreferences pref = getSharedPreferences(Config.Pref_Name, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editorPref = pref.edit();
+
+                        editorPref.putBoolean(Config.Login_Status_Pref, false);
+                        editorPref.putBoolean(Config.Login_Status_Pref_Admin, false);
+                        editorPref.putString(Config.Name_Pref, "");
+                        editorPref.putString(Config.Username_Pref, "");
+                        editorPref.putString(Config.Email_Pref, "");
+                        editorPref.putString(Config.Password_Pref, "");
+                        editorPref.putString(Config.Username_Pref_Time, "");
+                        editorPref.apply();
+
+                        Toast toast = Toast.makeText(viewPayroll.this, "Logout Success", Toast.LENGTH_SHORT);
+                        toast.show();
+                        Intent intent = new Intent(viewPayroll.this, mainPage.class);
+                        if(Build.VERSION.SDK_INT >= 11) {
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        } else {
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        }
+                        startActivity(intent);
+                        finish();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                })
+                .create()
+                .show();
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(v == bLogout){
+            confirmLogout();
+        }
+        if(v == bMonth_check){
+            getTime();
+        }
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -334,13 +451,10 @@ public class viewPayroll extends AppCompatActivity {
                 return params;
             }
         };
-
         queue2.add(stringRequest);
-
-
     };*/
 
-    }
+
 }
 
 

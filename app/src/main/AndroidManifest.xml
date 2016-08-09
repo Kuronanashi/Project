@@ -29,7 +29,7 @@
         <activity android:name=".userProfile" />
         <activity android:name=".viewPayroll" />
         <activity android:name=".editLeave" />
-        <activity android:name=".zxtest" />
+        <activity android:name=".userLeave" />
         <activity android:name=".deleteAccount" />
         <activity android:name=".applyLeave" />
         <activity android:name=".userChangePassword"></activity>

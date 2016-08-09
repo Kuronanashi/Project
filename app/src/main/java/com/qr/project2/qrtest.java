@@ -57,7 +57,7 @@ public class qrtest extends AppCompatActivity  {
         final TextView tvShowTime = (TextView) findViewById(R.id.tvShowTime);
         //final TextView tvShowTime2 = (TextView) findViewById(R.id.tvShowTime2);
 
-        final ListView List = (ListView) findViewById(R.id.listView);
+        //final ListView List = (ListView) findViewById(R.id.listView);
         final AlertDialog.Builder builder = new AlertDialog.Builder(qrtest.this);
         params = new ArrayList<HashMap<String, String>>();
 
@@ -149,7 +149,7 @@ public class qrtest extends AppCompatActivity  {
                             new int[]{R.id.Username, R.id.Time_Detail, R.id.Time_Logout, R.id.Time_Date}
                     );
 
-                    List.setAdapter(adapter);
+                    //List.setAdapter(adapter);
                 } catch (JSONException | ParseException e) {
                     e.printStackTrace();
                 }

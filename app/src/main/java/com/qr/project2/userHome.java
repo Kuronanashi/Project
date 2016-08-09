@@ -105,6 +105,7 @@ public class userHome extends AppCompatActivity implements View.OnClickListener{
         }
         if(v == bPayroll_view){
             Intent i = new Intent(userHome.this, viewPayroll.class);
+            i.putExtra(Config.Username_Pref_Time, Username);
             startActivity(i);
         }
     }

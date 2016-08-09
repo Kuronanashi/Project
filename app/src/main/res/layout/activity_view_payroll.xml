@@ -8,7 +8,8 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.qr.project2.viewPayroll"
-    android:background="@drawable/back">
+    android:background="@drawable/back"
+    >
 
     <TextView
         android:layout_width="wrap_content"
@@ -38,18 +39,19 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Choose Month :"
         android:id="@+id/tvChoose_month"
-        android:layout_below="@+id/tvPayroll_view"
+        android:layout_marginTop="23dp"
+        android:layout_below="@+id/tvTry"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="51dp" />
+        android:layout_alignParentStart="true" />
 
     <Spinner
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/sMonth_spinner"
-        android:layout_below="@+id/tvChoose_month"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignTop="@+id/tvChoose_month"
+        android:layout_toRightOf="@+id/tvChoose_month"
+        android:layout_toEndOf="@+id/tvChoose_month"
+        android:layout_alignBottom="@+id/tvChoose_month" />
 
     <Button
         android:layout_width="match_parent"
@@ -66,7 +68,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Result :"
         android:id="@+id/tvResult"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="180dp"
         android:layout_below="@+id/bMonth_check"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
@@ -80,5 +82,24 @@
         android:layout_below="@+id/tvResult"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Large Text"
+        android:id="@+id/tvTry"
+        android:layout_below="@+id/bLogout"
+        android:layout_alignRight="@+id/bLogout"
+        android:layout_alignEnd="@+id/bLogout" />
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/listView"
+        android:layout_below="@+id/bMonth_check"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="150dp" />
 
 </RelativeLayout>
