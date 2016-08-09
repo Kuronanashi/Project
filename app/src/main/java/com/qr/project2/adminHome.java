@@ -26,6 +26,9 @@ public class adminHome extends AppCompatActivity {
 
         Button bEdit = (Button) findViewById(R.id.bEdit);
         Button button = (Button) findViewById(R.id.button);
+        Button bUserPayroll = (Button) findViewById(R.id.bUserPayroll);
+
+
 
 
         final Button bLogout = (Button) findViewById(R.id.bLogout);
@@ -44,6 +47,14 @@ public class adminHome extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(adminHome.this, editLeave.class);
+                startActivity(i);
+            }
+        });
+
+        bUserPayroll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(adminHome.this, viewPayrollAdmin.class);
                 startActivity(i);
             }
         });

@@ -32,7 +32,8 @@
         <activity android:name=".userLeave" />
         <activity android:name=".deleteAccount" />
         <activity android:name=".applyLeave" />
-        <activity android:name=".userChangePassword"></activity>
+        <activity android:name=".userChangePassword" />
+        <activity android:name=".viewPayrollAdmin"></activity>
     </application>
 
 </manifest>

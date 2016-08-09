@@ -24,6 +24,8 @@ public class Config {
 
     public static final String Logout_url = "http://tryqr123.tk/getLogoutTime.php";
     public static final String editLeave_url = "http://tryqr123.tk/getLeave.php";
+    public static final String getUsername_url = "http://tryqr123.tk/getUsernameProfile.php";
+
 
     public static final String getTime_url = "http://tryqr123.tk/getTime.php?Username=";
 
