@@ -5,27 +5,27 @@
     android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/Username"
+        android:id="@+id/tv1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textColor="#222222"/>
 
     <TextView
-        android:id="@+id/Time_Detail"
+        android:id="@+id/tv2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#FF0000"/>
+
+    <TextView
+        android:id="@+id/tv3"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textColor="#222222"/>
 
     <TextView
-        android:id="@+id/Time_Logout"
+        android:id="@+id/tv4"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:textColor="#222222"/>
-
-    <TextView
-        android:id="@+id/Time_Date"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textColor="#222222"/>
+        android:textColor="#FF0000"/>
 
 </LinearLayout>

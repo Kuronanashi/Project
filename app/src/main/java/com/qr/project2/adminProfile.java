@@ -81,7 +81,7 @@ public class adminProfile extends AppCompatActivity {
                         params.add(detail_params);
                     }
 
-                    ListAdapter adapter = new SimpleAdapter(adminProfile.this, params, R.layout.get_profile,
+                    ListAdapter adapter = new SimpleAdapter(adminProfile.this, params, R.layout.get_payroll,
                             new String[]{T_ID,T_Name,T_Username,T_Email},
                             new int[]{R.id.tv1, R.id.tv2, R.id.tv3, R.id.tv4}
                     );

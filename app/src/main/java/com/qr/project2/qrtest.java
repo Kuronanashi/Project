@@ -146,7 +146,7 @@ public class qrtest extends AppCompatActivity  {
 
                     ListAdapter adapter = new SimpleAdapter(qrtest.this, params, R.layout.get_payroll,
                             new String[]{T_Username,T_Time_Detail,T_Time_Logout,T_Time_Date},
-                            new int[]{R.id.Username, R.id.Time_Detail, R.id.Time_Logout, R.id.Time_Date}
+                            new int[]{R.id.tv1, R.id.tv2, R.id.tv3, R.id.tv4}
                     );
 
                     //List.setAdapter(adapter);

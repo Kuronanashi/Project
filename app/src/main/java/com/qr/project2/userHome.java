@@ -100,8 +100,9 @@ public class userHome extends AppCompatActivity implements View.OnClickListener{
             confirmLogout();
         }
         if(v == bLeave){
-            /*Intent i = new Intent(userHome.this, userProfile.class);
-            startActivity(i);*/
+            Intent i = new Intent(userHome.this, applyLeave.class);
+            i.putExtra(Config.Username_Pref_Time, Username);
+            startActivity(i);
         }
         if(v == bPayroll_view){
             Intent i = new Intent(userHome.this, viewPayroll.class);

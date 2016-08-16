@@ -90,6 +90,7 @@ public class signID extends AppCompatActivity implements CompoundButton.OnChecke
                                     toast.show();
 
                                     editorPref.putString(Config.Username_Pref_Time, Username);
+                                    editorPref.putString(Config.Username_Pref_Time_Remember, Username);
                                     editorPref.apply();
 
                                     Intent i = new Intent(signID.this, userHome.class);
@@ -113,6 +114,7 @@ public class signID extends AppCompatActivity implements CompoundButton.OnChecke
                                     editorPref.apply();
 
                                     Intent i = new Intent(signID.this, adminHome.class);
+                                    i.putExtra(Config.Username_Pref_Time, Username);
                                     startActivity(i);
                                     finish();
 

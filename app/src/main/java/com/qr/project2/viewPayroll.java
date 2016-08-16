@@ -49,6 +49,7 @@ public class viewPayroll extends AppCompatActivity implements View.OnClickListen
     private final static String T_Time_Date = "T_Date";
 
     private final static String T_Total = "T_Total";
+    private final static String T_Leave_Date = "Leave_Date";
 
     Button bLogout,bMonth_check;
     String Username, Spinner_selected;
@@ -57,6 +58,8 @@ public class viewPayroll extends AppCompatActivity implements View.OnClickListen
 
     TextView tvTry,tvResult_data;
     ListView listView;
+
+    String Total_Leave;
 
     private String JSON_STRING;
 
@@ -166,7 +169,9 @@ public class viewPayroll extends AppCompatActivity implements View.OnClickListen
             SimpleDateFormat current_date_f = new SimpleDateFormat("d", Locale.US);
             String current_date = current_date_f.format(cal.getTime());
 
-            int Count_full =0 , Count_not_full = 0, Total_hour = 0 , Total_money = 0, Count_w=0;
+            String date_current = sdf.format(cal.getTime());
+
+            int Count_full =0 , Count_not_full = 0, Total_hour = 0 , Total_money = 0, Count_w=0 , diff_hour = 0;
 
             for(int i = 0; i<result.length(); i++){
                 JSONObject get = result.getJSONObject(i);
@@ -217,7 +222,6 @@ public class viewPayroll extends AppCompatActivity implements View.OnClickListen
                 }
 
 
-
                 if (x.matches(month_data) ) {
 
                     if (diffhours >= 8 || diffDays >= 1)
@@ -225,6 +229,7 @@ public class viewPayroll extends AppCompatActivity implements View.OnClickListen
                         Count_full++;
                     } else{
                         Count_not_full++;
+                        diff_hour = diff_hour + diffhours;
                     }
                     Count_w++;
                     Total_hour = Total_hour + diffhours;
@@ -234,29 +239,184 @@ public class viewPayroll extends AppCompatActivity implements View.OnClickListen
                     detail_params.put(T_Time_Detail, "Login Time : " +Time_Detail);
                     detail_params.put(T_Time_Logout, "Login Out : " +Time_Logout);
                     detail_params.put(T_Time_Date, "Time : " +dateFormat);
-                    detail_params.put(T_Total, current_date + "");
 
                     list.add(detail_params);
                 }
             }
             int Money = 2500 - (30 - Count_w) * 50;
-            String Text = "Your salary this month is : " + Money + "\nTotal working days : " + Count_w  + " from " + mo + " days with " + Count_full +  " day full time and " + Count_not_full + " day not full time \nTotal working hour : "+ Total_hour + " /month";
+            Count_w = Count_w + Integer.parseInt(Total_Leave);
 
-            if (x.matches(current_month)){
-                Text = "Your salary this month is : " + Money + "\nTotal working days : " + Count_w  + " from " + current_date + " days with " + Count_full +  " day full time and " + Count_not_full + " day not full time \nTotal working hour : "+ Total_hour + " /month";
+            double salary_day = 100;
+            double salary_hour = 10;
+
+            double salary_total = (Count_full + Integer.parseInt(Total_Leave)) * salary_day + diff_hour * salary_hour;
+            //double salary_total = 3000;
+
+            double salary_total_y = salary_total*12;
+            double EPF_y = salary_total_y *11 / 100;
+
+            if (EPF_y > 6000){
+                EPF_y = 6000;
+            }
+            double EPF = EPF_y/12;
+
+            double SOCSO = 0;
+            if (salary_total <= 800){
+                SOCSO = 4.25;
+            } else if (salary_total <= 2900){
+                SOCSO = 4.25 + (((salary_total/100) - 8) * 0.50 );
+            } else{
+                SOCSO = 14.75;
             }
 
+            double chargeable_income = salary_total_y - EPF_y - 9000;
+
+            double first , last,incometax_y = 0;
+            if (chargeable_income <=5000){
+                first = last = 0;
+                incometax_y = first +last;
+            } else if (chargeable_income <=10000){
+                first = 0;
+                last = (chargeable_income - 5000) / 100;
+                incometax_y = first +last;
+            } else if (chargeable_income <=20000){
+                first = 50;
+                last = (chargeable_income - 10000) / 100;
+                incometax_y = first +last;
+            } else if (chargeable_income <=35000){
+                first = 150;
+                last = (chargeable_income - 20000) * 5 / 100;
+                incometax_y = first +last;
+            } else if (chargeable_income <=50000){
+                first = 900;
+                last = (chargeable_income - 35000) * 10 / 100;
+                incometax_y = first +last;
+            } else if (chargeable_income <=70000){
+                first = 2400;
+                last = (chargeable_income - 50000) * 16 / 100;
+                incometax_y = first +last;
+            } else if (chargeable_income <=100000) {
+                first = 5600;
+                last = (chargeable_income - 70000) * 21 / 100;
+                incometax_y = first + last;
+            } else if (chargeable_income <=250000) {
+                first = 11900;
+                last = (chargeable_income - 100000) * 24 / 100;
+                incometax_y = first + last;
+            } else if (chargeable_income <=400000) {
+                first = 11900;
+                last = (chargeable_income - 250000) * 49 / 2  / 100;
+                incometax_y = first + last;
+            } else if (chargeable_income > 400000) {
+                first = 84650;
+                last = (chargeable_income - 400000) * 25 / 100;
+                incometax_y = first + last;
+            }
+
+            double incometax = incometax_y /12 ;
+            double total = EPF + SOCSO + incometax;
+            double total_y = total*12;
+
+            double annual, annual_year = 0;
+            annual = salary_total - total;
+            annual_year = annual* 12;
+
+            String annual_d =String.format("%.2f", annual);
+
+            String Text = "Current Date: " + date_current +
+                    "\nTotal working days : " + Count_w  + " from " + mo + " days with " + Count_full +  " day full time, " + Count_not_full + " day less then 8 hours and " + Total_Leave + " Leave approve " +
+                    "\nTotal working hour : "+ Total_hour + " /month" +
+                    "\nYour salary this month is : " + salary_total + " and after deducted with tax : " + annual_d;
+
+            if (x.matches(current_month)){
+                Text = "Current Date: " + date_current +
+                        "\nTotal working days : " + Count_w  + " from " + current_date + " days with " + Count_full +  " day full time, " + Count_not_full + " day less then 8 hours and " + Total_Leave + " Leave approve " +
+                        "\nTotal working hour : "+ Total_hour + " /month" +
+                        "\nYour salary this month is : " + salary_total + " and after deducted with tax : " + annual_d;
+            }
             tvResult_data.setText(Text);
 
         } catch (JSONException | ParseException e) {
             e.printStackTrace();
         }
 
-        ListAdapter adapter = new SimpleAdapter( viewPayroll.this, list, R.layout.get_profile,
-                new String[]{T_Username,T_Time_Detail,T_Time_Logout,T_Time_Date,T_Total},
-                new int[]{R.id.tv1, R.id.tv2, R.id.tv3, R.id.tv4,R.id.tv5});
+        ListAdapter adapter = new SimpleAdapter( viewPayroll.this, list, R.layout.get_payroll,
+                new String[]{T_Username,T_Time_Detail,T_Time_Logout,T_Time_Date},
+                new int[]{R.id.tv1, R.id.tv2, R.id.tv3, R.id.tv4});
         listView.setAdapter(adapter);
 
+    }
+
+
+
+    private void getStatus(){
+        class GetStatus extends AsyncTask<Void,Void,String>{
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+                showStatus(s);
+            }
+
+            @Override
+            protected String doInBackground(Void... params) {
+                RequestHandler rh = new RequestHandler();
+                String s = rh.sendGetRequestParam(Config.getLeaveDateForPayroll,Username);
+                return s;
+            }
+        }
+        GetStatus gs = new GetStatus();
+        gs.execute();
+    }
+
+    private void showStatus(String json){
+
+        try {
+            JSONObject jsonObject = new JSONObject(json);
+            JSONArray result = jsonObject.getJSONArray("result");
+
+            String x = sMonth_spinner.getSelectedItem().toString();
+            int m = Integer.parseInt(x);
+
+            String format = "yyyy-MM-dd HH:mm:ss";
+            SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.US);
+
+            SimpleDateFormat day_f = new SimpleDateFormat("dd", Locale.US);
+            SimpleDateFormat year_f = new SimpleDateFormat("yyyy", Locale.US);
+
+            Calendar cal=Calendar.getInstance();
+
+            String date_current = day_f.format(cal.getTime());
+            String year_current = year_f.format(cal.getTime());
+            //String d = "" + (date_current.getDay());
+            int d1 = Integer.parseInt(date_current);
+
+            int leave_count =0;
+
+            for(int i = 0; i<result.length(); i++){
+                JSONObject get = result.getJSONObject(i);
+                String Leave_Date = get.getString(T_Leave_Date);
+
+                Date date_leave = sdf.parse(Leave_Date);
+                String day_data = "" + (date_leave.getDay());
+                String month_data = "" + (date_leave.getMonth()+1);
+                String year_data = "" + (date_leave.getYear() + 1900);
+
+                int d2 = Integer.parseInt(day_data);
+                //date_leave.getTime();
+
+                if (x.matches(month_data) && year_current.matches(year_data) ) {
+                    if ( 1 <= d2 && d2 <= d1)
+                    {
+                        leave_count++;
+                    }
+                }
+                Total_Leave = leave_count + "";
+            }
+
+        } catch (JSONException | ParseException e) {
+            e.printStackTrace();
+        }
+        //tv3.setText(Status_and_count);
     }
 
 
@@ -327,6 +487,7 @@ public class viewPayroll extends AppCompatActivity implements View.OnClickListen
             confirmLogout();
         }
         if(v == bMonth_check){
+            getStatus();
             getTime();
         }
 

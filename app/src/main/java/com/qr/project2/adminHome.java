@@ -15,30 +15,27 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 public class adminHome extends AppCompatActivity {
+    String Username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_home);
 
-        /*RelativeLayout root=(RelativeLayout)findViewById(R.id.root);
-        root.setBackgroundColor(Color.parseColor(Config.Colour));*/
-
         Button bEdit = (Button) findViewById(R.id.bEdit);
         Button button = (Button) findViewById(R.id.button);
         Button bUserPayroll = (Button) findViewById(R.id.bUserPayroll);
-
-
-
-
+        Button bUserStatus = (Button) findViewById(R.id.bUserStatus);
         final Button bLogout = (Button) findViewById(R.id.bLogout);
+
+        final Button bAdd = (Button) findViewById(R.id.bAdd);
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(adminHome.this);
 
         bEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(adminHome.this, adminProfile.class);
+                Intent i = new Intent(adminHome.this, updateEmployee.class);
                 startActivity(i);
             }
         });
@@ -55,6 +52,23 @@ public class adminHome extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(adminHome.this, viewPayrollAdmin.class);
+                startActivity(i);
+            }
+        });
+
+        bUserStatus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(adminHome.this, viewLeaveAdmin.class);
+                i.putExtra(Config.Username_Pref_Time, Username);
+                startActivity(i);
+            }
+        });
+
+        bAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(adminHome.this, editAdd.class);
                 startActivity(i);
             }
         });

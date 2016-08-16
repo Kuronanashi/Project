@@ -46,8 +46,6 @@ public class editLeave extends AppCompatActivity implements ListView.OnItemClick
         bDecline = (Button) findViewById(R.id.bDecline);
         lvLeave = (ListView)findViewById(R.id.lvLeave);
 
-        final TextView tvshow = (TextView)findViewById(R.id.tvshow);
-
         lvLeave.setOnItemClickListener(this);
 
         getJSON();
@@ -57,7 +55,6 @@ public class editLeave extends AppCompatActivity implements ListView.OnItemClick
             public void onClick(View view) {
                 Toast.makeText(editLeave.this, "Status refreshed", Toast.LENGTH_SHORT).show();
                 getJSON();
-                tvshow.setText(Map_username);
             }
         });
 
@@ -110,7 +107,7 @@ public class editLeave extends AppCompatActivity implements ListView.OnItemClick
             e.printStackTrace();
         }
 
-        ListAdapter adapter = new SimpleAdapter( editLeave.this, list, R.layout.get_profile,
+        ListAdapter adapter = new SimpleAdapter( editLeave.this, list, R.layout.get_payroll,
                 new String[]{T_Username,T_Leave_Date,T_Description,T_Status},
                 new int[]{R.id.tv1, R.id.tv2, R.id.tv3, R.id.tv4});
         lvLeave.setAdapter(adapter);
@@ -173,8 +170,9 @@ public class editLeave extends AppCompatActivity implements ListView.OnItemClick
         HashMap<String,String> map =(HashMap)parent.getItemAtPosition(position);
         //Intent intent = new Intent(this, editLeave.class);
 
-        Toast.makeText(editLeave.this, id + "Selected", Toast.LENGTH_SHORT).show();
         Map_username = map.get(T_Username_Map).toString();
+        Toast.makeText(editLeave.this, Map_username + "Selected", Toast.LENGTH_SHORT).show();
+
         //startActivity(intent);
     }
 }

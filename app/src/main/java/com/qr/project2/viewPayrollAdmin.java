@@ -246,7 +246,6 @@ public class viewPayrollAdmin extends AppCompatActivity implements View.OnClickL
                     detail_params.put(T_Time_Detail, "Login Time : " +Time_Detail);
                     detail_params.put(T_Time_Logout, "Login Out : " +Time_Logout);
                     detail_params.put(T_Time_Date, "Time : " +dateFormat);
-                    detail_params.put(T_Total, current_date + "");
 
                     list.add(detail_params);
                 }
@@ -264,9 +263,9 @@ public class viewPayrollAdmin extends AppCompatActivity implements View.OnClickL
             e.printStackTrace();
         }
 
-        ListAdapter adapter = new SimpleAdapter( viewPayrollAdmin.this, list, R.layout.get_profile,
-                new String[]{T_Username,T_Time_Detail,T_Time_Logout,T_Time_Date,T_Total},
-                new int[]{R.id.tv1, R.id.tv2, R.id.tv3, R.id.tv4,R.id.tv5});
+        ListAdapter adapter = new SimpleAdapter( viewPayrollAdmin.this, list, R.layout.get_payroll,
+                new String[]{T_Username,T_Time_Detail,T_Time_Logout,T_Time_Date},
+                new int[]{R.id.tv1, R.id.tv2, R.id.tv3, R.id.tv4});
         listView.setAdapter(adapter);
 
     }
